@@ -196,7 +196,7 @@ export default function Home() {
         </Card>
 
         <div className="text-center text-sm text-muted-foreground pb-4">
-          Développer sur mesure par Zéro Bureau Inc.
+          Développé sur mesure par Zéro Bureau Inc.
         </div>
       </div>
     </div>
