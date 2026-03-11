@@ -10,7 +10,7 @@ const ALLOWED_TYPES = [
 
 const MAX_SIZE = 20 * 1024 * 1024
 
-const AIRTABLE_ENDPOINT = 'https://api.airtable.com/v0/appmEbO8oLChuvMyL/tblxiZlC1BCL8oaMd'
+const AIRTABLE_ENDPOINT = 'https://api.airtable.com/v0/appmEbO8oLChuvMyL/Buildings'
 
 async function fetchBuildingNames(ids: string[], apiKey: string): Promise<Map<string, string>> {
   const map = new Map<string, string>()
