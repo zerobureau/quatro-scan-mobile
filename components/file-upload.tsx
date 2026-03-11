@@ -20,7 +20,8 @@ export function FileUpload({ file, onFileSelect, onFileRemove }: FileUploadProps
   const [isCompressing, setIsCompressing] = useState(false)
 
   const handleCameraCapture = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.currentTarget.files
+    const input = e.currentTarget
+    const files = input.files
     if (files && files.length > 0) {
       setIsCompressing(true)
       try {
@@ -33,9 +34,9 @@ export function FileUpload({ file, onFileSelect, onFileRemove }: FileUploadProps
         onFileSelect(processedFile)
       } finally {
         setIsCompressing(false)
+        input.value = ''
       }
     }
-    e.currentTarget.value = ''
   }, [onFileSelect])
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
