@@ -86,7 +86,7 @@ export default function Home() {
       formData.append('source', 'mobile-app')
 
       const response = await fetch(
-        'https://TON-N8N/webhook/mobile-invoice',
+        'https://zerobureau.app.n8n.cloud/webhook/mobile-invoice',
         {
           method: 'POST',
           body: formData,
