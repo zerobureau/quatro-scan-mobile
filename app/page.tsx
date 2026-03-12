@@ -26,6 +26,7 @@ export default function Home() {
   const loadBuildings = async () => {
     try {
       setLoadingBuildings(true)
+
       const response = await fetch('/api/buildings')
       const data = await response.json()
 
@@ -74,29 +75,36 @@ export default function Home() {
 
     try {
       setLoading(true)
+
       const formData = new FormData()
       formData.append('file', file)
-      formData.append('buildings', JSON.stringify(selectedBuildings.map((b) => b.id)))
+      formData.append(
+        'buildings',
+        JSON.stringify(selectedBuildings.map((b) => b.id))
+      )
       formData.append('notes', notes)
+      formData.append('source', 'mobile-app')
 
-      const response = await fetch('/api/send-invoice', {
-        method: 'POST',
-        body: formData,
+      const response = await fetch(
+        'https://TON-N8N/webhook/mobile-invoice',
+        {
+          method: 'POST',
+          body: formData,
+        }
+      )
+
+      if (!response.ok) {
+        throw new Error("Erreur lors de l'envoi vers n8n")
+      }
+
+      toast({
+        title: 'Succès',
+        description: 'Facture envoyée avec succès',
       })
 
-      const result = await response.json()
-
-      if (response.ok) {
-        toast({
-          title: 'Succès',
-          description: 'Facture envoyée avec succès',
-        })
-        setFile(null)
-        setSelectedBuildings([])
-        setNotes('')
-      } else {
-        throw new Error(result.error || "Erreur lors de l'envoi")
-      }
+      setFile(null)
+      setSelectedBuildings([])
+      setNotes('')
     } catch (error: any) {
       toast({
         title: 'Erreur',
@@ -112,7 +120,9 @@ export default function Home() {
     <div className="min-h-screen bg-white">
       <div className="container max-w-4xl mx-auto px-4 py-8 space-y-8">
         <div className="text-center space-y-2 pt-4">
-          <h1 className="text-4xl font-bold text-[#ae8b4d]">Factures Immeubles</h1>
+          <h1 className="text-4xl font-bold text-[#ae8b4d]">
+            Factures Immeubles
+          </h1>
           <p className="text-muted-foreground text-lg">
             Envoyez vos factures rapidement et facilement
           </p>
@@ -160,11 +170,14 @@ export default function Home() {
 
         <Card className="border-[#ae8b4d]/20">
           <CardHeader>
-            <CardTitle className="text-[#ae8b4d]">Notes (optionnel)</CardTitle>
+            <CardTitle className="text-[#ae8b4d]">
+              Notes (optionnel)
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
               <Label htmlFor="notes">Ajouter une note à la facture</Label>
+
               <Textarea
                 id="notes"
                 placeholder="Ajoutez des notes ou commentaires..."
