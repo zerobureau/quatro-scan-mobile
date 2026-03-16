@@ -25,7 +25,7 @@ export function BuildingSelector({
   onBuildingSelect,
 }: BuildingSelectorProps) {
   const [searchTerm, setSearchTerm] = useState('')
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(true)
 
   const filtered = useMemo(() => {
     if (!searchTerm.trim()) return buildings
