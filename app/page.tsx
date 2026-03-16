@@ -13,7 +13,7 @@ import { Loader as Loader2, Send } from 'lucide-react'
 export default function Home() {
   const [file, setFile] = useState<File | null>(null)
   const [buildings, setBuildings] = useState<Building[]>([])
-  const [selectedBuildings, setSelectedBuildings] = useState<Building[]>([])
+  const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(null)
   const [notes, setNotes] = useState('')
   const [loading, setLoading] = useState(false)
   const [loadingBuildings, setLoadingBuildings] = useState(true)
@@ -46,13 +46,6 @@ export default function Home() {
     }
   }
 
-  const handleBuildingToggle = (building: Building) => {
-    setSelectedBuildings((prev) =>
-      prev.some((b) => b.id === building.id)
-        ? prev.filter((b) => b.id !== building.id)
-        : [...prev, building]
-    )
-  }
 
   const handleSubmit = async () => {
     if (!file) {
@@ -64,10 +57,10 @@ export default function Home() {
       return
     }
 
-    if (selectedBuildings.length === 0) {
+    if (!selectedBuilding) {
       toast({
         title: 'Immeuble requis',
-        description: 'Veuillez sélectionner au moins un immeuble',
+        description: 'Veuillez sélectionner un immeuble',
         variant: 'destructive',
       })
       return
@@ -78,10 +71,7 @@ export default function Home() {
 
       const formData = new FormData()
       formData.append('file', file)
-      formData.append(
-        'buildings',
-        JSON.stringify(selectedBuildings.map((b) => b.id))
-      )
+      formData.append('buildings', JSON.stringify([selectedBuilding.id]))
       formData.append('notes', notes)
       formData.append('source', 'mobile-app')
 
@@ -100,7 +90,7 @@ export default function Home() {
       })
 
       setFile(null)
-      setSelectedBuildings([])
+      setSelectedBuilding(null)
       setNotes('')
     } catch (error: any) {
       toast({
@@ -157,8 +147,8 @@ export default function Home() {
               ) : (
                 <BuildingSelector
                   buildings={buildings}
-                  selectedBuildings={selectedBuildings}
-                  onBuildingToggle={handleBuildingToggle}
+                  selectedBuilding={selectedBuilding}
+                  onBuildingSelect={setSelectedBuilding}
                 />
               )}
             </CardContent>
@@ -186,7 +176,7 @@ export default function Home() {
 
             <Button
               onClick={handleSubmit}
-              disabled={loading || !file || selectedBuildings.length === 0}
+              disabled={loading || !file || !selectedBuilding}
               className="w-full bg-[#ae8b4d] hover:bg-[#9a7a42] text-white"
               size="lg"
             >
