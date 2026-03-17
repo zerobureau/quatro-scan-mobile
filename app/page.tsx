@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/hooks/use-toast'
 import { Loader as Loader2, Send } from 'lucide-react'
+import { AuthGate } from '@/components/auth-gate'
 
 export default function Home() {
   const [file, setFile] = useState<File | null>(null)
@@ -106,6 +107,7 @@ export default function Home() {
   }
 
   return (
+    <AuthGate>
     <div className="min-h-screen bg-white">
       <div className="container max-w-4xl mx-auto px-4 py-8 space-y-8">
         <div className="text-center space-y-2 pt-4">
@@ -202,5 +204,6 @@ export default function Home() {
         </div>
       </div>
     </div>
+    </AuthGate>
   )
 }
