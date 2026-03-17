@@ -72,6 +72,8 @@ export default function Home() {
       const formData = new FormData()
       formData.append('file', file)
       formData.append('buildings', JSON.stringify([selectedBuilding.id]))
+      formData.append('building_name', selectedBuilding.name)
+      formData.append('building_entity', selectedBuilding.company)
       formData.append('notes', notes)
       formData.append('source', 'mobile-app')
 
