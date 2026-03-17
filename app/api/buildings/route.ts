@@ -1,16 +1,19 @@
 import { NextResponse } from 'next/server'
 
-const AIRTABLE_ENDPOINT = 'https://api.airtable.com/v0/appmEbO8oLChuvMyL/tblxiZlC1BCL8oaMd'
+const AIRTABLE_TABLE_ID = 'tblxiZlC1BCL8oaMd'
 
 export async function GET() {
   try {
     const apiKey = process.env.AIRTABLE_API_KEY
-    if (!apiKey) {
+    const baseId = process.env.AIRTABLE_BASE_ID
+    if (!apiKey || !baseId) {
       return NextResponse.json(
-        { error: 'AIRTABLE_API_KEY manquant' },
+        { error: 'AIRTABLE_API_KEY ou AIRTABLE_BASE_ID manquant' },
         { status: 500 }
       )
     }
+
+    const AIRTABLE_ENDPOINT = `https://api.airtable.com/v0/${baseId}/${AIRTABLE_TABLE_ID}`
 
     const buildings: { id: string; name: string; company: string }[] = []
     let offset: string | undefined
