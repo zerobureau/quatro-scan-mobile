@@ -10,51 +10,22 @@ Application web mobile-first permettant de capturer des factures et de les envoy
 
 ## Configuration
 
-### 1. Variables d'environnement Supabase
+### Variables d'environnement
 
-Les variables Supabase sont déjà configurées dans `.env` :
-
-```
-NEXT_PUBLIC_SUPABASE_URL=...
-NEXT_PUBLIC_SUPABASE_ANON_KEY=...
-```
-
-### 2. Configuration Airtable (optionnel)
-
-Pour synchroniser les propriétés depuis Airtable, ajoutez dans `.env` :
+Ajoutez les variables suivantes dans `.env` :
 
 ```
 AIRTABLE_API_KEY=your_airtable_api_key
 AIRTABLE_BASE_ID=your_airtable_base_id
-```
 
-Les tables attendues dans Airtable :
-- "Compte GL Jerzen Beleck"
-- "Compte GL Chakaboudi"
-- "Compte GL Patchak"
-- "Compte GL Quatro"
-
-Chaque table doit avoir une colonne "Adresse de la propriété".
-
-### 3. Configuration Resend
-
-Pour l'envoi d'emails, ajoutez dans `.env` :
-
-```
 RESEND_API_KEY=your_resend_api_key
 RESEND_FROM_EMAIL=votre-email@domaine.com
 RESEND_TO_EMAIL=destinataire@domaine.com
 ```
 
+Sur Netlify, configurez ces mêmes variables dans **Site settings > Environment variables**.
+
 ## Utilisation
-
-### Synchroniser les données Airtable
-
-Pour synchroniser les propriétés depuis Airtable vers Supabase :
-
-```bash
-curl -X POST http://localhost:3000/api/sync-airtable
-```
 
 ### Workflow de l'application
 
@@ -75,31 +46,21 @@ curl -X POST http://localhost:3000/api/sync-airtable
 
 ## Architecture
 
-### Base de données
-
-Table `properties` dans Supabase :
-- `id` : UUID unique
-- `address` : Adresse de la propriété
-- `company` : Nom de la compagnie
-- `gl_account` : Compte GL (optionnel)
-- `created_at` / `updated_at` : Timestamps
-
 ### API Routes
 
-- `POST /api/sync-airtable` : Synchronise les données depuis Airtable
-- `GET /api/properties` : Récupère la liste des propriétés
-- `POST /api/send-invoice` : Envoie la facture par email
+- `GET /api/buildings` : Récupère la liste des immeubles depuis Airtable
+- `POST /api/send-invoice` : Envoie la facture par email via Resend
 
 ### Composants
 
 - `FileUpload` : Gestion de l'upload de fichiers avec drag & drop
-- `PropertySelector` : Sélecteur multi-choix avec recherche
+- `BuildingSelector` : Sélecteur multi-choix avec recherche
 
 ## Technologies
 
-- **Frontend** : Next.js 14 (App Router), React, TypeScript
+- **Frontend** : Next.js 13 (App Router), React, TypeScript
 - **Styling** : Tailwind CSS, shadcn/ui
-- **Base de données** : Supabase (PostgreSQL)
+- **Immeubles** : Airtable (via API REST)
 - **Email** : Resend
 - **Upload** : react-dropzone
 
@@ -114,19 +75,10 @@ npm run dev
 
 # Build de production
 npm run build
-
-# Démarrer en production
-npm start
 ```
 
 ## Sécurité
 
-- Row Level Security (RLS) activé sur toutes les tables
+- Les clés API ne sont jamais exposées côté client
 - Validation des fichiers côté client et serveur
-- Variables d'environnement pour les clés sensibles
-
-## Notes
-
-- L'application est optimisée pour une utilisation mobile-first
-- Les propriétés avec la même adresse sont regroupées automatiquement
-- Toutes les adresses sont dédupliquées dans l'interface utilisateur
+- Variables d'environnement pour toutes les valeurs sensibles
