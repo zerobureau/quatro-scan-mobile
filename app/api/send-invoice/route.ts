@@ -13,7 +13,7 @@ export async function POST(req: Request) {
   }
 
   const response = await fetch(
-    'https://zerobureau.app.n8n.cloud/webhook/mobile-invoice',
+    'https://zerobureau.app.n8n.cloud/webhook-test/mobile-invoice',
     {
       method: 'POST',
       body: forwarded,
