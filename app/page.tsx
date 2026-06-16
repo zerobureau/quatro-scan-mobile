@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/hooks/use-toast'
+import { MAX_UPLOAD_BYTES } from '@/lib/image-utils'
 import { Loader as Loader2, Send } from 'lucide-react'
 import { AuthGate } from '@/components/auth-gate'
 
@@ -62,6 +63,16 @@ export default function Home() {
       toast({
         title: 'Immeuble requis',
         description: 'Veuillez sélectionner un immeuble',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    if (file.size > MAX_UPLOAD_BYTES) {
+      toast({
+        title: 'Fichier trop volumineux',
+        description:
+          "Le fichier dépasse la limite d'envoi. Pour un PDF, réduisez-le; pour une photo, reprenez-la en plus basse résolution.",
         variant: 'destructive',
       })
       return
