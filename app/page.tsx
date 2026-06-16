@@ -8,7 +8,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/hooks/use-toast'
-import { MAX_UPLOAD_BYTES } from '@/lib/image-utils'
+import { MAX_SEND_BYTES } from '@/lib/image-utils'
+
+const N8N_WEBHOOK_URL =
+  process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL ||
+  'https://zerobureau.app.n8n.cloud/webhook/mobile-invoice'
 import { Loader as Loader2, Send } from 'lucide-react'
 import { AuthGate } from '@/components/auth-gate'
 
@@ -68,11 +72,11 @@ export default function Home() {
       return
     }
 
-    if (file.size > MAX_UPLOAD_BYTES) {
+    if (file.size > MAX_SEND_BYTES) {
       toast({
         title: 'Fichier trop volumineux',
         description:
-          "Le fichier dépasse la limite d'envoi. Pour un PDF, réduisez-le; pour une photo, reprenez-la en plus basse résolution.",
+          'Le fichier dépasse 24 Mo (limite de pièce jointe courriel). Réduisez-le et réessayez.',
         variant: 'destructive',
       })
       return
@@ -89,7 +93,7 @@ export default function Home() {
       formData.append('notes', notes)
       formData.append('source', 'mobile-app')
 
-      const response = await fetch('/api/send-invoice', {
+      const response = await fetch(N8N_WEBHOOK_URL, {
         method: 'POST',
         body: formData,
       })

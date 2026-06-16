@@ -1,6 +1,9 @@
-// Netlify Functions ont une limite de ~6 Mo sur le corps de la requête.
-// On vise une taille bien en dessous pour laisser de la marge au reste du multipart.
+// Cible de compression des images : on garde les courriels légers.
 export const MAX_UPLOAD_BYTES = 3.5 * 1024 * 1024
+
+// Limite finale d'envoi. Le fichier part directement vers n8n (pas via Netlify),
+// donc la seule contrainte réelle est la taille max de pièce jointe Gmail (25 Mo).
+export const MAX_SEND_BYTES = 24 * 1024 * 1024
 
 export async function compressImage(file: File): Promise<File> {
   // On ne compresse que les images. Les PDF (et autres) sont retournés tels quels.
