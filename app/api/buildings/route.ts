@@ -2,6 +2,11 @@ import { NextResponse } from 'next/server'
 
 const AIRTABLE_TABLE_ID = 'tblxiZlC1BCL8oaMd'
 
+// Sans ceci, Next.js fige la liste d'immeubles au moment du déploiement :
+// un immeuble ajouté ou désactivé dans Airtable n'apparaît qu'au déploiement suivant.
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export async function GET() {
   try {
     const apiKey = process.env.AIRTABLE_API_KEY
